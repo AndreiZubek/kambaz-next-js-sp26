@@ -48,6 +48,8 @@ export default function Modules() {
               </ul>
             </li>
           </ul>
+        </li>
+        <li className="wd-module">
           <div className="wd-title">
             Week 1, Lecture 2 - Formatting User Interfaces with HTML
           </div>
