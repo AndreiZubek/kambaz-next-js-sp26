@@ -4,7 +4,7 @@ export default function AccountLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <div id="wd-kambaz">
+    <div id="wd-kambaz-account">
       <table>
         <tbody>
           <tr>
