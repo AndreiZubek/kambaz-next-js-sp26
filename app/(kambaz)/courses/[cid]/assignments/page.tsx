@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import AssignmentsControls from "./assignmentsControls";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
@@ -6,8 +7,25 @@ import LessonControlButtons from "../modules/LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { PiNotePencil } from "react-icons/pi";
+import { useParams } from "next/navigation";
+import * as db from "../../../database";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const assignments = db.assignments;
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const datePart = date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    const timePart = date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    return `${datePart} at ${timePart}`;
+  };
+
   return (
     <div id="wd-assignments">
       <AssignmentsControls />
@@ -27,7 +45,49 @@ export default function Assignments() {
             </div>
           </div>
           <ListGroup className="wd-lessons rounded-0">
-            <ListGroupItem className="wd-lesson p-3 ps-1 d-flex align-items-center">
+            {assignments
+              .filter((assignment: any) => assignment.course === cid)
+              .map((assignment: any) => (
+                <ListGroupItem
+                  key={assignment._id}
+                  className="wd-lesson p-3 ps-1 d-flex align-items-center"
+                >
+                  <BsGripVertical className="me-2 fs-3" />
+                  <PiNotePencil className="me-2 fs-2 text-success" />{" "}
+                  <div className="grow px-3">
+                    <div className="d-flex align-items-center mb-1">
+                      <Link
+                        href={`/courses/${cid}/assignments/${assignment._id}`}
+                        className="wd-assignment-link text-reset text-decoration-none fs-4"
+                      >
+                        {assignment.title}
+                      </Link>{" "}
+                    </div>
+                    <small className="text-danger">Multiple Modules</small>
+                    <small className="text-muted">
+                      {" | "}Not available until{" "}
+                      {formatDate(assignment.availableDate)} |
+                    </small>
+                    <br></br>
+                    <small className="text-muted">
+                      Due {formatDate(assignment.dueDate)} | {assignment.points}
+                      pts
+                    </small>
+                  </div>
+                  <div className="ms-auto">
+                    <LessonControlButtons />
+                  </div>
+                </ListGroupItem>
+              ))}
+          </ListGroup>
+        </ListGroupItem>
+      </ListGroup>
+    </div>
+  );
+}
+
+{
+  /* <ListGroupItem className="wd-lesson p-3 ps-1 d-flex align-items-center">
               <BsGripVertical className="me-2 fs-3" />
               <PiNotePencil className="me-2 fs-2 text-success" />{" "}
               <div className="grow px-3">
@@ -101,11 +161,5 @@ export default function Assignments() {
               <div className="ms-auto">
                 <LessonControlButtons />
               </div>
-            </ListGroupItem>
-          </ListGroup>
-        </ListGroupItem>
-      </ListGroup>
-      ;
-    </div>
-  );
+            </ListGroupItem> */
 }

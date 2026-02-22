@@ -1,0 +1,93 @@
+[
+  {
+    "_id": "CS101",
+    "name": "Full Stack software developer",
+    "number": "CS1234",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "CS123",
+    "credits": 4,
+    "image": "/images/reactjs.jpg",
+    "description": "Learn to build complete web applications from front-end to back-end. Covers HTML, CSS, JavaScript, React, Node.js, databases, and deployment strategies for modern full-stack development."
+  },
+  {
+    "_id": "CS102",
+    "name": "Software Development",
+    "number": "CS4530",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "CS123",
+    "credits": 3,
+    "image": "/images/softwaredev.jpg",
+    "description": "Comprehensive introduction to software engineering principles including design patterns, testing methodologies, version control, agile development, and collaborative coding practices."
+  },
+  {
+    "_id": "CS103",
+    "name": "Web Development",
+    "number": "CS4550",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "CS123",
+    "credits": 4,
+    "image": "/images/webdev.jpg",
+    "description": "Master modern web technologies including responsive design, client-side frameworks, RESTful APIs, authentication, and progressive web applications. Build interactive and dynamic websites."
+  },
+  {
+    "_id": "CS104",
+    "name": "Data Visualization",
+    "number": "DS4200",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Data Science",
+    "credits": 3,
+    "image": "/images/datavis.jpg",
+    "description": "Transform complex data into meaningful visual representations. Learn visualization principles, interactive dashboards, D3.js, Tableau, and storytelling with data for effective communication."
+  },
+  {
+    "_id": "CS105",
+    "name": "Market Structure",
+    "number": "ECON3255",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Economics",
+    "credits": 3,
+    "image": "/images/marketstructure.jpg",
+    "description": "Explore economic theories of market organization, competition, monopolies, oligopolies, and pricing strategies. Analyze real-world market behaviors and regulatory implications."
+  },
+  {
+    "_id": "CS106",
+    "name": "test class",
+    "number": "CS1000",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "CS123",
+    "credits": 3,
+    "image": "/images/test.jpg",
+    "description": "Introduction to computer science fundamentals including algorithms, data structures, problem-solving techniques, and programming logic. Perfect for beginners starting their CS journey.",
+    "author": "654f9ec2ea7ead465908d1e3"
+  },
+  {
+    "_id": "CS107",
+    "name": "Online Course",
+    "number": "CS1500",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "CS123",
+    "credits": 4,
+    "image": "/images/onlinecourse.jpg",
+    "description": "Self-paced online learning experience covering advanced programming concepts, project management, and software architecture. Features video lectures, interactive exercises, and peer collaboration.",
+    "author": "654f9ec2ea7ead465908d1e3"
+  },
+  {
+    "_id": "CS108",
+    "name": "Accessibility Course",
+    "number": "CS2000",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "CS123",
+    "credits": 4,
+    "image": "/images/accessibility.jpg",
+    "description": "Design and develop inclusive digital experiences following WCAG guidelines. Learn assistive technologies, semantic HTML, ARIA labels, and testing for accessibility compliance.",
+    "author": "654f9ec2ea7ead465908d1e3"
+  }
+]

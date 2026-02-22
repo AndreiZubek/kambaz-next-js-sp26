@@ -7,32 +7,39 @@ import {
   FormGroup,
   FormSelect,
 } from "react-bootstrap";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import * as db from "../../../../database";
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+
+  const assignment = db.assignments.find((a: any) => a._id === aid);
+
+  if (!assignment) {
+    return <div>Assignment not found</div>;
+  }
+
   return (
     <div id="wd-assignments-editor">
       <FormGroup>
         <label htmlFor="wd-name">Assignment Name</label>
-        <input className="form-control mb-4" id="wd-name" defaultValue="A1" />
+        <input
+          className="form-control mb-4"
+          id="wd-name"
+          defaultValue={assignment.title}
+        />
       </FormGroup>
+
       <FormGroup>
         <textarea
           className="form-control mb-4"
           rows={12}
           id="wd-description"
-          defaultValue={`The assignment is available online.
-
-Submit a link to the landing page of your Web application running on Netlify.
-
-The landing page should include the following:
-- Your full name and section
-- Links to each of the lab assignments
-- Link to the Kanbas application
-- Link to all relevant source code repositories
-
-The Kanbas application should include a link to navigate back to the landing page.`}
-        ></textarea>
+          defaultValue={assignment.description}
+        />
       </FormGroup>
+
       <div className="row mb-3 justify-content-end">
         <label
           htmlFor="wd-assignment-points"
@@ -45,7 +52,7 @@ The Kanbas application should include a link to navigate back to the landing pag
             className="form-control"
             id="wd-assignment-points"
             type="number"
-            defaultValue="100"
+            defaultValue={assignment.points}
           />
         </div>
       </div>
@@ -97,7 +104,6 @@ The Kanbas application should include a link to navigate back to the landing pag
         >
           Submission Type
         </label>
-
         <div className="col-sm-8">
           <div className="form-control">
             <FormSelect
@@ -111,7 +117,6 @@ The Kanbas application should include a link to navigate back to the landing pag
 
             <div id="wd-online-options">
               <div className="fw-bold my-3">Online Entry Options</div>
-
               <FormCheck type="checkbox" label="Text Entry" className="mb-3" />
               <FormCheck
                 type="checkbox"
@@ -143,29 +148,17 @@ The Kanbas application should include a link to navigate back to the landing pag
         <label htmlFor="wd-assign" className="col-sm-4 col-form-label text-end">
           Assign
         </label>
-
         <div className="col-sm-8">
           <div className="form-control">
-            <label htmlFor="wd-assign-to" className="fs-5 pt-2">
-              Assign to
-            </label>
-            <FormSelect
-              id="wd-assign-to"
-              defaultValue="EVERYONE"
-              className="mt-2"
-            >
-              <option value="EVERYONE">Everyone</option>
-              <option value="SELECT_STUDENTS">Select Students</option>
-            </FormSelect>
-
             <label htmlFor="wd-due-date" className="fs-6 pt-3">
               Due
             </label>
             <FormControl
               id="wd-due-date"
-              type="datetime-local"
-              defaultValue="2024-05-13T23:59"
+              type="date"
+              defaultValue={assignment.dueDate}
             />
+
             <div className="row mb-3">
               <div className="col-sm-6">
                 <label htmlFor="wd-available-from" className="fs-6 pt-3">
@@ -173,37 +166,44 @@ The Kanbas application should include a link to navigate back to the landing pag
                 </label>
                 <FormControl
                   id="wd-available-from"
-                  type="datetime-local"
-                  defaultValue="2024-05-06T23:59"
+                  type="date"
+                  defaultValue={assignment.availableDate}
                 />
               </div>
               <div className="col-sm-6">
                 <label htmlFor="wd-available-until" className="fs-6 pt-3">
                   Until
                 </label>
-                <FormControl id="wd-available-until" type="datetime-local" />
+                <FormControl id="wd-available-until" type="date" />
               </div>
             </div>
           </div>
         </div>
       </div>
+
       <hr className="mt-5" />
-      <Button
-        variant="danger"
-        size="lg"
-        className="me-1 float-end"
-        id="wd-save"
-      >
-        Save
-      </Button>
-      <Button
-        variant="secondary"
-        size="lg"
-        className="me-1 float-end"
-        id="wd-cancel"
-      >
-        Cancel
-      </Button>
+
+      <Link href={`/courses/${cid}/assignments`}>
+        <Button
+          variant="danger"
+          size="lg"
+          className="me-1 float-end"
+          id="wd-save"
+        >
+          Save
+        </Button>
+      </Link>
+
+      <Link href={`/courses/${cid}/assignments`}>
+        <Button
+          variant="secondary"
+          size="lg"
+          className="me-1 float-end"
+          id="wd-cancel"
+        >
+          Cancel
+        </Button>
+      </Link>
     </div>
   );
 }

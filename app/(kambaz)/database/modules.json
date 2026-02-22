@@ -1,0 +1,213 @@
+[
+  {
+    "_id": "M101",
+    "name": "Frontend Development",
+    "description": "Introduction to HTML, CSS, JavaScript, and React for building user interfaces.",
+    "course": "CS101",
+    "lessons": [
+      {
+        "_id": "L101",
+        "name": "HTML & CSS Basics",
+        "description": "Structure and style web pages.",
+        "module": "M101"
+      },
+      {
+        "_id": "L102",
+        "name": "JavaScript Fundamentals",
+        "description": "Core JS concepts and DOM manipulation.",
+        "module": "M101"
+      },
+      {
+        "_id": "L103",
+        "name": "Intro to React",
+        "description": "Components, props, and state in React.",
+        "module": "M101"
+      }
+    ]
+  },
+  {
+    "_id": "M102",
+    "name": "Backend Development",
+    "description": "Server-side programming with Node.js, Express, and REST APIs.",
+    "course": "CS101",
+    "lessons": [
+      {
+        "_id": "L201",
+        "name": "Node.js & Express",
+        "description": "Building servers with Node and Express.",
+        "module": "M102"
+      },
+      {
+        "_id": "L202",
+        "name": "RESTful API Design",
+        "description": "Principles of REST and building APIs.",
+        "module": "M102"
+      },
+      {
+        "_id": "L203",
+        "name": "Authentication & Security",
+        "description": "JWT, OAuth, and securing endpoints.",
+        "module": "M102"
+      }
+    ]
+  },
+  {
+    "_id": "M103",
+    "name": "Databases & Deployment",
+    "description": "Working with SQL/NoSQL databases and deploying full-stack applications.",
+    "course": "CS101",
+    "lessons": [
+      {
+        "_id": "L301",
+        "name": "MongoDB & Mongoose",
+        "description": "NoSQL database design and queries.",
+        "module": "M103"
+      },
+      {
+        "_id": "L302",
+        "name": "SQL Fundamentals",
+        "description": "Relational databases and SQL queries.",
+        "module": "M103"
+      },
+      {
+        "_id": "L303",
+        "name": "Deployment with Docker",
+        "description": "Containerizing and deploying applications.",
+        "module": "M103"
+      }
+    ]
+  },
+
+  {
+    "_id": "M201",
+    "name": "Software Design Patterns",
+    "description": "Common design patterns and their application in software development.",
+    "course": "CS102"
+  },
+  {
+    "_id": "M202",
+    "name": "Testing & Quality Assurance",
+    "description": "Unit testing, integration testing, and test-driven development.",
+    "course": "CS102"
+  },
+  {
+    "_id": "M203",
+    "name": "Agile & Collaboration",
+    "description": "Agile methodologies, version control, and team collaboration practices.",
+    "course": "CS102"
+  },
+
+  {
+    "_id": "M301",
+    "name": "Responsive Design",
+    "description": "Building mobile-friendly, responsive layouts with CSS and frameworks.",
+    "course": "CS103"
+  },
+  {
+    "_id": "M302",
+    "name": "Client-Side Frameworks",
+    "description": "Deep dive into React, state management, and component architecture.",
+    "course": "CS103"
+  },
+  {
+    "_id": "M303",
+    "name": "APIs & Progressive Web Apps",
+    "description": "Consuming RESTful APIs and building PWAs.",
+    "course": "CS103"
+  },
+
+  {
+    "_id": "M401",
+    "name": "Data Visualization Principles",
+    "description": "Foundations of visual encoding, chart types, and design principles.",
+    "course": "CS104"
+  },
+  {
+    "_id": "M402",
+    "name": "D3.js & Interactive Visuals",
+    "description": "Building dynamic and interactive data visualizations with D3.js.",
+    "course": "CS104"
+  },
+  {
+    "_id": "M403",
+    "name": "Dashboards & Tableau",
+    "description": "Building business dashboards with Tableau and best practices.",
+    "course": "CS104"
+  },
+
+  {
+    "_id": "M501",
+    "name": "Market Structures & Competition",
+    "description": "Perfect competition, monopoly, oligopoly, and monopolistic competition.",
+    "course": "CS105"
+  },
+  {
+    "_id": "M502",
+    "name": "Pricing Strategies",
+    "description": "Price discrimination, bundling, and dynamic pricing models.",
+    "course": "CS105"
+  },
+  {
+    "_id": "M503",
+    "name": "Regulation & Antitrust",
+    "description": "Government regulation, antitrust policy, and market intervention.",
+    "course": "CS105"
+  },
+
+  {
+    "_id": "M601",
+    "name": "Algorithms & Data Structures",
+    "description": "Core algorithms and data structures for problem solving.",
+    "course": "CS106"
+  },
+  {
+    "_id": "M602",
+    "name": "Programming Logic",
+    "description": "Foundational programming concepts, control flow, and problem decomposition.",
+    "course": "CS106"
+  },
+  {
+    "_id": "M603",
+    "name": "Object-Oriented Programming",
+    "description": "Classes, inheritance, polymorphism, and encapsulation.",
+    "course": "CS106"
+  },
+
+  {
+    "_id": "M701",
+    "name": "Online Learning Strategies",
+    "description": "Techniques for effective self-paced learning and time management.",
+    "course": "CS107"
+  },
+  {
+    "_id": "M702",
+    "name": "Software Architecture",
+    "description": "Architectural patterns like MVC, microservices, and event-driven design.",
+    "course": "CS107"
+  },
+  {
+    "_id": "M703",
+    "name": "Peer Collaboration & Projects",
+    "description": "Working in teams, code reviews, and project management tools.",
+    "course": "CS107"
+  },
+
+  {
+    "_id": "M801",
+    "name": "Web Accessibility Standards",
+    "description": "guidelines, semantic HTML, and inclusive design principles.",
+    "course": "CS108"
+  },
+  {
+    "_id": "M802",
+    "name": "ARIA & Assistive Technologies",
+    "description": "Using ARIA roles and testing with screen readers.",
+    "course": "CS108"
+  },
+  {
+    "_id": "M803",
+    "name": "Accessible Forms & Media",
+    "description": "Building accessible forms, images, video, and interactive components.",
+    "course": "CS108"
+  }
+]
