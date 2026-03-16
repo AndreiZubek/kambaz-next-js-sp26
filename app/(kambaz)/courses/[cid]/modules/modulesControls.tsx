@@ -5,10 +5,31 @@ import {
   DropdownMenu,
   DropdownToggle,
 } from "react-bootstrap";
+import ModuleEditor from "./ModuleEditor";
+
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 import { TiCancel } from "react-icons/ti";
-export default function ModulesControls() {
+import { useState } from "react";
+import { useSelector } from "react-redux";
+export default function ModulesControls({
+  moduleName,
+  setModuleName,
+  addModule,
+}: {
+  moduleName: string;
+  setModuleName: (title: string) => void;
+  addModule: () => void;
+}) {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const isFaculty = useSelector(
+    (state: any) =>
+      state.accountReducer.currentUser?.role === "FACULTY" ||
+      state.accountReducer.currentUser?.role === "ADMIN" ||
+      state.accountReducer.currentUser?.role === "TA",
+  );
   return (
     <div id="wd-modules-controls" className="text-nowrap">
       <Button
@@ -16,6 +37,7 @@ export default function ModulesControls() {
         size="lg"
         className="me-1 float-end"
         id="wd-add-module-btn"
+        onClick={isFaculty ? handleShow : undefined}
       >
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Module
@@ -58,6 +80,14 @@ export default function ModulesControls() {
       >
         Collapse All
       </Button>
+      <ModuleEditor
+        show={show}
+        handleClose={handleClose}
+        dialogTitle="Add Module"
+        moduleName={moduleName}
+        setModuleName={setModuleName}
+        addModule={addModule}
+      />
     </div>
   );
 }

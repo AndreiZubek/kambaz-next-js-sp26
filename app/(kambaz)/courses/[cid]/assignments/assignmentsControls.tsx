@@ -4,7 +4,17 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+import { useParams, useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 export default function AssignmentsControls() {
+  const { cid } = useParams();
+  const router = useRouter();
+  const isFaculty = useSelector(
+    (state: any) =>
+      state.accountReducer.currentUser?.role === "FACULTY" ||
+      state.accountReducer.currentUser?.role === "ADMIN" ||
+      state.accountReducer.currentUser?.role === "TA",
+  );
   return (
     <div id="wd-assignments-controls" className="text-nowrap position-relative">
       <Form.Group
@@ -24,6 +34,11 @@ export default function AssignmentsControls() {
         size="lg"
         className="me-1 float-end"
         id="wd-add-assignment"
+        onClick={() => {
+          if (isFaculty) {
+            router.push(`/courses/${cid}/assignments/new`);
+          }
+        }}
       >
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Assignment

@@ -2,57 +2,99 @@
 
 import {
   Button,
-  FormCheck,
   FormControl,
   FormGroup,
   FormSelect,
 } from "react-bootstrap";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import * as db from "../../../../database";
+import { useParams, useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { addAssignment, updateAssignment } from "../reducer";
+import { useState } from "react";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
 
-  const assignment = db.assignments.find((a: any) => a._id === aid);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
-  if (!assignment) {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const isNew = aid === "new";
+
+  const existing = isNew ? null : assignments.find((a: any) => a._id === aid);
+
+  if (!isNew && !existing) {
     return <div>Assignment not found</div>;
   }
 
+  const [title, setTitle] = useState(existing?.title ?? "New Assignment");
+  const [description, setDescription] = useState(existing?.description ?? "");
+  const [points, setPoints] = useState(existing?.points ?? 100);
+  const [dueDate, setDueDate] = useState(existing?.dueDate ?? "");
+  const [availableDate, setAvailableDate] = useState(
+    existing?.availableDate ?? "",
+  );
+  const [availableUntilDate, setAvailableUntilDate] = useState(
+    existing?.availableUntilDate ?? "",
+  );
+
+  const handleSave = () => {
+    const assignmentData = {
+      _id: existing?._id,
+      title,
+      description,
+      points: Number(points),
+      dueDate,
+      availableDate,
+      availableUntilDate,
+      course: cid,
+    };
+
+    if (isNew) {
+      dispatch(addAssignment(assignmentData));
+    } else {
+      dispatch(updateAssignment(assignmentData));
+    }
+
+    router.push(`/courses/${cid}/assignments`);
+  };
+
+  const handleCancel = () => router.push(`/courses/${cid}/assignments`);
+
   return (
     <div id="wd-assignments-editor">
-      <FormGroup>
+      <FormGroup className="mb-4">
         <label htmlFor="wd-name">Assignment Name</label>
         <input
-          className="form-control mb-4"
+          className="form-control"
           id="wd-name"
-          defaultValue={assignment.title}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup className="mb-4">
+        <label htmlFor="wd-description">Description</label>
         <textarea
-          className="form-control mb-4"
-          rows={12}
+          className="form-control"
+          rows={6}
           id="wd-description"
-          defaultValue={assignment.description}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </FormGroup>
 
       <div className="row mb-3 justify-content-end">
-        <label
-          htmlFor="wd-assignment-points"
-          className="col-sm-4 col-form-label text-end"
-        >
+        <label htmlFor="wd-points" className="col-sm-4 col-form-label text-end">
           Points
         </label>
         <div className="col-sm-8">
           <input
             className="form-control"
-            id="wd-assignment-points"
+            id="wd-points"
             type="number"
-            defaultValue={assignment.points}
+            value={points}
+            onChange={(e) => setPoints(Number(e.target.value))}
           />
         </div>
       </div>
@@ -65,11 +107,7 @@ export default function AssignmentEditor() {
           Assignment Group
         </label>
         <div className="col-sm-8">
-          <FormSelect
-            id="wd-assignment-group"
-            defaultValue="ASSIGNMENTS"
-            className="form-control"
-          >
+          <FormSelect id="wd-assignment-group" defaultValue="ASSIGNMENTS">
             <option value="ASSIGNMENTS">ASSIGNMENTS</option>
             <option value="EXAMS">EXAMS</option>
             <option value="PROJECTS">PROJECTS</option>
@@ -78,76 +116,7 @@ export default function AssignmentEditor() {
       </div>
 
       <div className="row mb-3 justify-content-end">
-        <label
-          htmlFor="wd-display-grade"
-          className="col-sm-4 col-form-label text-end"
-        >
-          Display Grade as
-        </label>
-        <div className="col-sm-8">
-          <FormSelect
-            id="wd-display-grade"
-            defaultValue="PERCENTAGE"
-            className="form-control"
-          >
-            <option value="PERCENTAGE">Percentage</option>
-            <option value="FRACTION">Fraction</option>
-            <option value="POINTS">Points</option>
-          </FormSelect>
-        </div>
-      </div>
-
-      <div className="row mb-3 justify-content-end">
-        <label
-          htmlFor="wd-submission-type"
-          className="col-sm-4 col-form-label text-end"
-        >
-          Submission Type
-        </label>
-        <div className="col-sm-8">
-          <div className="form-control">
-            <FormSelect
-              id="wd-submission-type"
-              defaultValue="ONLINE"
-              className="mt-2"
-            >
-              <option value="ONLINE">Online</option>
-              <option value="ON_PAPER">On Paper</option>
-            </FormSelect>
-
-            <div id="wd-online-options">
-              <div className="fw-bold my-3">Online Entry Options</div>
-              <FormCheck type="checkbox" label="Text Entry" className="mb-3" />
-              <FormCheck
-                type="checkbox"
-                label="Website URL"
-                className="mb-3"
-                defaultChecked
-              />
-              <FormCheck
-                type="checkbox"
-                label="Media Recordings"
-                className="mb-3"
-              />
-              <FormCheck
-                type="checkbox"
-                label="Student Annotation"
-                className="mb-3"
-              />
-              <FormCheck
-                type="checkbox"
-                label="File Uploads"
-                className="mb-3"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="row mb-3 justify-content-end">
-        <label htmlFor="wd-assign" className="col-sm-4 col-form-label text-end">
-          Assign
-        </label>
+        <label className="col-sm-4 col-form-label text-end">Assign</label>
         <div className="col-sm-8">
           <div className="form-control">
             <label htmlFor="wd-due-date" className="fs-6 pt-3">
@@ -156,7 +125,8 @@ export default function AssignmentEditor() {
             <FormControl
               id="wd-due-date"
               type="date"
-              defaultValue={assignment.dueDate}
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
             />
 
             <div className="row mb-3">
@@ -167,14 +137,20 @@ export default function AssignmentEditor() {
                 <FormControl
                   id="wd-available-from"
                   type="date"
-                  defaultValue={assignment.availableDate}
+                  value={availableDate}
+                  onChange={(e) => setAvailableDate(e.target.value)}
                 />
               </div>
               <div className="col-sm-6">
                 <label htmlFor="wd-available-until" className="fs-6 pt-3">
                   Until
                 </label>
-                <FormControl id="wd-available-until" type="date" />
+                <FormControl
+                  id="wd-available-until"
+                  type="date"
+                  value={availableUntilDate}
+                  onChange={(e) => setAvailableUntilDate(e.target.value)}
+                />
               </div>
             </div>
           </div>
@@ -183,27 +159,22 @@ export default function AssignmentEditor() {
 
       <hr className="mt-5" />
 
-      <Link href={`/courses/${cid}/assignments`}>
-        <Button
-          variant="danger"
-          size="lg"
-          className="me-1 float-end"
-          id="wd-save"
-        >
-          Save
-        </Button>
-      </Link>
-
-      <Link href={`/courses/${cid}/assignments`}>
-        <Button
-          variant="secondary"
-          size="lg"
-          className="me-1 float-end"
-          id="wd-cancel"
-        >
-          Cancel
-        </Button>
-      </Link>
+      <Button
+        variant="danger"
+        size="lg"
+        className="me-1 float-end"
+        onClick={handleSave}
+      >
+        Save
+      </Button>
+      <Button
+        variant="secondary"
+        size="lg"
+        className="me-1 float-end"
+        onClick={handleCancel}
+      >
+        Cancel
+      </Button>
     </div>
   );
 }
