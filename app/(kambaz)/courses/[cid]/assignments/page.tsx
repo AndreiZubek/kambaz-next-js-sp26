@@ -7,13 +7,15 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { PiNotePencil } from "react-icons/pi";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa6";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments } from "./reducer";
+import * as client from "./client";
 
 export default function Assignments() {
   const { cid } = useParams();
+  const courseId = cid as string;
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const options = { timeZone: "America/New_York" };
@@ -41,6 +43,19 @@ export default function Assignments() {
       state.accountReducer.currentUser?.role === "TA",
   );
 
+  const loadAssignments = async () => {
+    try {
+      const data = await client.fetchAssignmentsForCourse(courseId);
+      dispatch(setAssignments(data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadAssignments();
+  }, [courseId]);
+
   return (
     <div id="wd-assignments">
       <AssignmentsControls />
@@ -55,7 +70,14 @@ export default function Assignments() {
               variant="danger"
               size="sm"
               onClick={() => {
-                dispatch(deleteAssignment(confirmDeleteId));
+                client
+                  .deleteAssignment(confirmDeleteId)
+                  .then(() => {
+                    dispatch(deleteAssignment(confirmDeleteId));
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                  });
                 setConfirmDeleteId(null);
               }}
             >
@@ -86,7 +108,7 @@ export default function Assignments() {
           </div>
           <ListGroup className="wd-lessons rounded-0">
             {assignments
-              .filter((assignment: any) => assignment.course === cid)
+              .filter((assignment: any) => assignment.course === courseId)
               .map((assignment: any) => (
                 <ListGroupItem
                   key={assignment._id}

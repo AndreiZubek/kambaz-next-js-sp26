@@ -1,31 +1,27 @@
 "use client";
 
-import {
-  Button,
-  FormControl,
-  FormGroup,
-  FormSelect,
-} from "react-bootstrap";
+import { Button, FormControl, FormGroup, FormSelect } from "react-bootstrap";
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, updateAssignment } from "../reducer";
-import { useState } from "react";
+import { addAssignment, setAssignments, updateAssignment } from "../reducer";
+import { useEffect, useState } from "react";
+import * as client from "../client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
+  const courseId = cid as string;
+  const assignmentId = aid as string;
 
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const isNew = aid === "new";
+  const isNew = assignmentId === "new";
 
-  const existing = isNew ? null : assignments.find((a: any) => a._id === aid);
-
-  if (!isNew && !existing) {
-    return <div>Assignment not found</div>;
-  }
+  const existing = isNew
+    ? null
+    : assignments.find((a: any) => a._id === assignmentId);
 
   const [title, setTitle] = useState(existing?.title ?? "New Assignment");
   const [description, setDescription] = useState(existing?.description ?? "");
@@ -37,8 +33,33 @@ export default function AssignmentEditor() {
   const [availableUntilDate, setAvailableUntilDate] = useState(
     existing?.availableUntilDate ?? "",
   );
+  const [loading, setLoading] = useState(!isNew && !existing);
 
-  const handleSave = () => {
+  useEffect(() => {
+    if (isNew || existing) {
+      return;
+    }
+    const loadAssignment = async () => {
+      try {
+        const assignment = await client.fetchAssignmentById(assignmentId);
+        dispatch(updateAssignment(assignment));
+        setTitle(assignment.title ?? "");
+        setDescription(assignment.description ?? "");
+        setPoints(assignment.points ?? 100);
+        setDueDate(assignment.dueDate ?? "");
+        setAvailableDate(assignment.availableDate ?? "");
+        setAvailableUntilDate(assignment.availableUntilDate ?? "");
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAssignment();
+  }, [assignmentId, isNew, existing, dispatch]);
+
+  const handleSave = async () => {
     const assignmentData = {
       _id: existing?._id,
       title,
@@ -47,19 +68,40 @@ export default function AssignmentEditor() {
       dueDate,
       availableDate,
       availableUntilDate,
-      course: cid,
+      course: courseId,
     };
 
-    if (isNew) {
-      dispatch(addAssignment(assignmentData));
-    } else {
-      dispatch(updateAssignment(assignmentData));
+    try {
+      if (isNew) {
+        const created = await client.createAssignmentForCourse(
+          courseId,
+          assignmentData,
+        );
+        dispatch(addAssignment(created));
+      } else {
+        const updated = await client.updateAssignment({
+          ...assignmentData,
+          _id: assignmentId,
+        });
+        dispatch(updateAssignment(updated));
+      }
+      const refreshed = await client.fetchAssignmentsForCourse(courseId);
+      dispatch(setAssignments(refreshed));
+      router.push(`/courses/${courseId}/assignments`);
+    } catch (error) {
+      console.error(error);
     }
-
-    router.push(`/courses/${cid}/assignments`);
   };
 
-  const handleCancel = () => router.push(`/courses/${cid}/assignments`);
+  const handleCancel = () => router.push(`/courses/${courseId}/assignments`);
+
+  if (loading) {
+    return <div>Loading assignment...</div>;
+  }
+
+  if (!isNew && !existing && !title) {
+    return <div>Assignment not found</div>;
+  }
 
   return (
     <div id="wd-assignments-editor">

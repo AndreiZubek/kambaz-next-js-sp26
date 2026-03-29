@@ -2,14 +2,17 @@
 import { ReactNode } from "react";
 import CourseNavigation from "./Navigation";
 import { FaAlignJustify } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import { RootState } from "../../store";
 import Breadcrumb from "./Breadcrumb";
 import React, { useEffect } from "react";
+import * as enrollmentsClient from "../../enrollments/client";
+import { setEnrollments } from "../../enrollments/reducer";
 export default function CoursesLayout({ children }: { children: ReactNode }) {
   const { cid } = useParams();
   const router = useRouter();
+  const dispatch = useDispatch();
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
   const { currentUser } = useSelector(
     (state: RootState) => state.accountReducer,
@@ -27,6 +30,24 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
       state.accountReducer.currentUser?.role === "ADMIN" ||
       state.accountReducer.currentUser?.role === "TA",
   );
+
+  useEffect(() => {
+    const loadEnrollments = async () => {
+      if (!currentUser?._id) {
+        return;
+      }
+      try {
+        const data = await enrollmentsClient.fetchEnrollmentsForUser(
+          currentUser._id,
+        );
+        dispatch(setEnrollments(data));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadEnrollments();
+  }, [currentUser, dispatch]);
 
   useEffect(() => {
     if (!currentUser) {
