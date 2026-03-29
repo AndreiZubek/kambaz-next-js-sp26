@@ -19,13 +19,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
 
 export default function Modules() {
-  const { cid } = useParams();
+  const params = useParams();
+  const cid = Array.isArray(params.cid) ? params.cid[0] : params.cid;
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: RootState) => state.modulesReducer);
   const dispatch = useDispatch();
   const onUpdateModule = async (module: any) => {
     await client.updateModule(module);
-    const newModules = modules.map((m: any) => m._id === module._id ? module : m );
+    const newModules = modules.map((m: any) =>
+      m._id === module._id ? module : m,
+    );
     dispatch(setModules(newModules));
   };
 
