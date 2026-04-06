@@ -10,6 +10,9 @@ export default function AccountNavigation() {
   );
   const links = currentUser ? ["profile"] : ["signin", "signup"];
   const pathname = usePathname();
+  const isAdmin = useSelector(
+    (state: any) => state.accountReducer.currentUser?.role === "ADMIN",
+  );
   return (
     <Nav variant="pills">
       {links.map((link) => (
@@ -19,6 +22,16 @@ export default function AccountNavigation() {
           </NavLink>{" "}
         </NavItem>
       ))}
+      {currentUser && isAdmin && (
+        <NavLink
+          as={Link}
+          href={`/account/users`}
+          active={pathname.endsWith("users")}
+        >
+          {" "}
+          Users{" "}
+        </NavLink>
+      )}
     </Nav>
   );
 }
