@@ -37,6 +37,17 @@ export default function Dashboard() {
     image: "/images/reactjs.jpg",
     description: "New Description",
   });
+
+  const refreshEnrollments = async () => {
+    if (!currentUser?._id) {
+      return;
+    }
+    const data = await enrollmentsClient.fetchEnrollmentsForUser(
+      currentUser._id,
+    );
+    dispatch(setEnrollments(data));
+  };
+
   const fetchCourses = async () => {
     try {
       const allCoursesData = await client.fetchAllCourses();
@@ -50,10 +61,7 @@ export default function Dashboard() {
       return;
     }
     try {
-      const data = await enrollmentsClient.fetchEnrollmentsForUser(
-        currentUser._id,
-      );
-      dispatch(setEnrollments(data));
+      await refreshEnrollments();
     } catch (error) {
       console.error(error);
     }
@@ -110,6 +118,9 @@ export default function Dashboard() {
       state.accountReducer.currentUser?.role === "ADMIN" ||
       state.accountReducer.currentUser?.role === "TA",
   );
+  const isStudent = useSelector(
+    (state: any) => state.accountReducer.currentUser?.role === "STUDENT",
+  );
 
   if (!currentUser) {
     return <p>Please sign in to view your courses.</p>;
@@ -125,10 +136,7 @@ export default function Dashboard() {
   const handleEnroll = async (courseId: string) => {
     try {
       await enrollmentsClient.enrollUserInCourse(currentUser._id, courseId);
-      const enrollmentData = await enrollmentsClient.fetchEnrollmentsForUser(
-        currentUser._id,
-      );
-      dispatch(setEnrollments(enrollmentData));
+      await refreshEnrollments();
     } catch (error) {
       console.error(error);
     }
@@ -137,10 +145,7 @@ export default function Dashboard() {
   const handleUnenroll = async (courseId: string) => {
     try {
       await enrollmentsClient.unenrollUserFromCourse(currentUser._id, courseId);
-      const enrollmentData = await enrollmentsClient.fetchEnrollmentsForUser(
-        currentUser._id,
-      );
-      dispatch(setEnrollments(enrollmentData));
+      await refreshEnrollments();
     } catch (error) {
       console.error(error);
     }
@@ -209,9 +214,6 @@ export default function Dashboard() {
                 <Card>
                   <Link
                     href={`/courses/${course._id}/home`}
-                    onClick={(e) => {
-                      if (!enrolled) e.preventDefault();
-                    }}
                     className="wd-dashboard-course-link text-decoration-none text-dark"
                   >
                     <CardImg
@@ -236,16 +238,18 @@ export default function Dashboard() {
                   <div style={{ padding: "10px" }}>
                     {enrolled ? (
                       <>
-                        <button
-                          onClick={(event) => {
-                            event.preventDefault();
-                            handleUnenroll(course._id);
-                          }}
-                          className="btn btn-danger float-end"
-                          id={`wd-unenroll-${course._id}`}
-                        >
-                          Unenroll
-                        </button>
+                        {isStudent && (
+                          <button
+                            onClick={(event) => {
+                              event.preventDefault();
+                              handleUnenroll(course._id);
+                            }}
+                            className="btn btn-danger float-end"
+                            id={`wd-unenroll-${course._id}`}
+                          >
+                            Unenroll
+                          </button>
+                        )}
                         {isFaculty && (
                           <>
                             <button
@@ -273,16 +277,18 @@ export default function Dashboard() {
                       </>
                     ) : (
                       <>
-                        <button
-                          onClick={(event) => {
-                            event.preventDefault();
-                            handleEnroll(course._id);
-                          }}
-                          className="btn btn-success float-end"
-                          id={`wd-enroll-${course._id}`}
-                        >
-                          Enroll
-                        </button>
+                        {isStudent && (
+                          <button
+                            onClick={(event) => {
+                              event.preventDefault();
+                              handleEnroll(course._id);
+                            }}
+                            className="btn btn-success float-end"
+                            id={`wd-enroll-${course._id}`}
+                          >
+                            Enroll
+                          </button>
+                        )}
                         {isFaculty && showAllCourses && (
                           <>
                             <button
