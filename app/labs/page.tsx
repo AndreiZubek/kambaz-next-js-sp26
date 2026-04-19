@@ -3,7 +3,7 @@ export default function labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
-      <h2>Andrei Zubek Section 2</h2>
+      <h2>Final Project: Andrei Zubek and Nathan Yan Section 2</h2>
       <ul>
         <li>
           <Link href="/labs/lab1" id="wd-lab1-link">
